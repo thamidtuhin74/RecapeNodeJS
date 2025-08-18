@@ -5,8 +5,8 @@ const addFn = (param1, param2) => {
 };
 
 // export { a, addFn }; //exported names are not changeable
-export { a };
+export { a }; //named Export
 
-export default addFn; //exported names are  changeable
+export default addFn; //Default Export //exported names are  changeable
 
 // console.log(module);
