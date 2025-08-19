@@ -19,3 +19,10 @@ const server = http.createServer((req, res)=>{
 server.listen(5000, "127.0.0.1", ()=>{
     console.log("✅ Server Lisening at port 5000")
 })
+
+/*
+
+/todos : Get all the todos;
+/todos/create-todo : Create a todo
+
+*/
