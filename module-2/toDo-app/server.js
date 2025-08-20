@@ -10,6 +10,13 @@ console.log(dbfilepath);
 
 const toDos = fs.readFileSync(dbfilepath, {encoding: 'utf-8'});
 const server = http.createServer((req, res)=>{
+
+    const url = new URL(req.url, `http://${req.headers.host}`);
+
+    const pathName = url.pathname;
+
+    console.log(url, "url")
+
     console.log(req.url, req.method);
     // res.end("Welcome to ToDo App server");
 
@@ -43,6 +50,25 @@ const server = http.createServer((req, res)=>{
 
             res.end(JSON.stringify({id, title, body,createdAt}));
         })
+
+
+
+        
+    }
+    else if( pathName ==='/todos' && req.method === "GET"){
+        const title = url.searchParams.get("title")
+        console.log(title);
+        const pargedAllTodo = JSON.parse(toDos);
+
+        const singleTodo = pargedAllTodo.find(todo=> todo.title === title); 
+
+        const strSingleTodo = JSON.stringify(singleTodo);
+
+        res.writeHead(202,{
+            "content-type" : "application/json"
+        })
+        
+        res.end(strSingleTodo);
 
 
 
