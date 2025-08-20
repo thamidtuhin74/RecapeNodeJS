@@ -12,12 +12,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongodb_1 = require("mongodb");
 const app_1 = __importDefault(require("./app/app"));
 let server;
 const port = 5000;
+const uri = "mongodb+srv://toDoAdmin:noS2TzL4l2NFHZx1@cluster0.vqsktco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const client = new mongodb_1.MongoClient(uri, {
+    serverApi: {
+        version: mongodb_1.ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
 const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
-    server = app_1.default.listen(port, () => {
+    yield client.connect();
+    console.log("successfully connected to MongoDB!");
+    //     const db = await client.db("toDoDB");
+    //     const collection = await db.collection("todos").insertOne({
+    //     "title": "Learn Node.js",
+    //     "body": "Buiild ToDo App Backend",
+    //     "createdAt": "2025-08-20T08:05:17.143Z"
+    //   })
+    //     console.log(collection, "collections");
+    server = app_1.default.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
         console.log(`App in runing in port : ${port}`);
-    });
+    }));
 });
 bootstrap();

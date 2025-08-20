@@ -6,3 +6,6 @@
 
 * app - router handleing, middleware
 * server - server handleing - StaticRange, stop, 
+
+toDoAdmin
+noS2TzL4l2NFHZx1
