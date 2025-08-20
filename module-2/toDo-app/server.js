@@ -94,6 +94,10 @@ const server = http.createServer((req, res)=>{
         
     }
     else if( pathName ==='/todos/update-todo' && req.method === "DELETE"){
+        res.writeHead(202,{
+            "content-type" : "application/json"
+        })
+        
         const title = url.searchParams.get("title")
         console.log(title);
         
@@ -101,27 +105,25 @@ const server = http.createServer((req, res)=>{
 
         const singleTodoIndex = pargedAllTodo.findIndex(todo=> todo.title === title); 
 
-        const deletedAt = new Date().toLocaleString();
+        if(singleTodoIndex<0){
+            res.end(`Your given TODO "${title}" is not avaiable`);
+        }
+        else{
+            console.log("singleTodoIndex : " + singleTodoIndex)
 
-        pargedAllTodo.splice(singleTodoIndex, 1);
+            const deletedAt = new Date().toLocaleString();
 
-        fs.writeFileSync(dbfilepath, JSON.stringify(pargedAllTodo,null , 2), {encoding: "utf-8"})
+            pargedAllTodo.splice(singleTodoIndex, 1);
 
-        // res.end(`Updateed Todo ${title} , ${body}`);
-        res.end(
-            JSON.stringify(
+            fs.writeFileSync(dbfilepath, JSON.stringify(pargedAllTodo,null , 2), {encoding: "utf-8"})
+
+            // res.end(`Updateed Todo ${title} , ${body}`);
+            res.end(
                 {
                     title, deletedAt
                 }
-            )
-        );
-
-        
-        
-
-        res.writeHead(202,{
-            "content-type" : "application/json"
-        })
+            );
+        }
         
     }
     else{
