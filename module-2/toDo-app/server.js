@@ -1,12 +1,14 @@
 const http = require('http');
 // console.log(http);
 
+const path =  require('path');
+const fs = require('fs');
 
-const toDos = [
-    { id: 1, title: "Learn Node.js", completed: false },
-    { id: 2, title: "Build an API", completed: true },
-    { id: 3, title: "Practice daily", completed: false }
-  ]
+const dbfilepath  =  path.join(__dirname, './db/todo.json');
+console.log(dbfilepath);
+
+
+const toDos = fs.readFileSync(dbfilepath, {encoding: 'utf-8'});
 const server = http.createServer((req, res)=>{
     console.log(req.url, req.method);
     // res.end("Welcome to ToDo App server");
@@ -17,13 +19,34 @@ const server = http.createServer((req, res)=>{
         "content-type" : "application/json",
         "email": "admin@gmail.com"
        });
-        res.end(JSON.stringify(toDos));
+        res.end(toDos);
     }
     else if(req.url === "/todos/create-todo" && req.method === "POST"){
         res.writeHead(202,{
-            "content-type" : "text/html"
+            "content-type" : "application/json"
         })
-        res.end(`<h2>Add a ne ToDo</h2>`)
+        let data = "";
+        req.on('data', (chank)=>{
+            data = data + chank;
+        })
+        req.on('end',()=>{
+            const {id, title, body} = JSON.parse(data);
+
+            const createdAt = new Date().toLocaleString();
+
+             pargedAllTodo = JSON.parse(toDos)
+
+            pargedAllTodo.push({id, title, body,createdAt});
+            // console.log(pargedAllTodo)
+
+            fs.writeFileSync(dbfilepath, JSON.stringify(pargedAllTodo, null, 2), {encoding: 'utf-8'});
+
+            res.end(JSON.stringify({id, title, body,createdAt}));
+        })
+
+
+
+        
     }
     else{
         res.end("Route not found;")
