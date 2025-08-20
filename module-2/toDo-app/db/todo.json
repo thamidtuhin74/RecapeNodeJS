@@ -2,7 +2,7 @@
   {
     "id": 1,
     "title": "Learn Node.js",
-    "body": "Start with HTTP module basics",
+    "body": "Buiild ToDo App Backend",
     "createdAt": "2025-08-20T08:05:17.143Z"
   },
   {
@@ -12,21 +12,15 @@
     "createdAt": "2025-08-20T08:05:17.143Z"
   },
   {
-    "id": 3,
-    "title": "Practice daily",
-    "body": "Spend at least 1 hour coding",
-    "createdAt": "2025-08-20T08:05:17.143Z"
-  },
-  {
     "id": 4,
     "title": "express",
-    "body": "Practice ExpressJS",
+    "body": "Build a ExpressJS Backend",
     "createdAt": "8/20/2025, 2:44:19 PM"
   },
   {
     "id": 5,
     "title": "Mongoose",
-    "body": "Practice Mongoose",
+    "body": "Build a Mongoose Backend with NodeJS",
     "createdAt": "8/20/2025, 2:46:01 PM"
   }
 ]

@@ -55,23 +55,73 @@ const server = http.createServer((req, res)=>{
 
         
     }
-    else if( pathName ==='/todos' && req.method === "GET"){
+    else if( pathName ==='/todos/update-todo' && req.method === "PATCH"){
         const title = url.searchParams.get("title")
         console.log(title);
-        const pargedAllTodo = JSON.parse(toDos);
+        let data = "";
+        req.on("data", (chank)=>{
+            data = data + chank;
+        })
+        req.on("end", ()=>{
+            const {body} = JSON.parse(data)
+            console.log(body);
 
-        const singleTodo = pargedAllTodo.find(todo=> todo.title === title); 
+            const pargedAllTodo = JSON.parse(toDos);
 
-        const strSingleTodo = JSON.stringify(singleTodo);
+            const singleTodoIndex = pargedAllTodo.findIndex(todo=> todo.title === title); 
+
+            pargedAllTodo[singleTodoIndex].body = body;
+
+            fs.writeFileSync(dbfilepath, JSON.stringify(pargedAllTodo,null , 2), {encoding: "utf-8"})
+
+            // res.end(`Updateed Todo ${title} , ${body}`);
+            res.end(
+                JSON.stringify(
+                    {
+                        title, body, createdAt: pargedAllTodo[singleTodoIndex].createdAt
+                    }
+                )
+            );
+
+        })
+
+        
+        
 
         res.writeHead(202,{
             "content-type" : "application/json"
         })
         
-        res.end(strSingleTodo);
+    }
+    else if( pathName ==='/todos/update-todo' && req.method === "DELETE"){
+        const title = url.searchParams.get("title")
+        console.log(title);
+        
+        const pargedAllTodo = JSON.parse(toDos);
 
+        const singleTodoIndex = pargedAllTodo.findIndex(todo=> todo.title === title); 
 
+        const deletedAt = new Date().toLocaleString();
 
+        pargedAllTodo.splice(singleTodoIndex, 1);
+
+        fs.writeFileSync(dbfilepath, JSON.stringify(pargedAllTodo,null , 2), {encoding: "utf-8"})
+
+        // res.end(`Updateed Todo ${title} , ${body}`);
+        res.end(
+            JSON.stringify(
+                {
+                    title, deletedAt
+                }
+            )
+        );
+
+        
+        
+
+        res.writeHead(202,{
+            "content-type" : "application/json"
+        })
         
     }
     else{
