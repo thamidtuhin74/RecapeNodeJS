@@ -56,6 +56,50 @@ todosRouter.get('/:_id', async(req: Request, res: Response)=>{
 
     res.json(todo)
 })
+todosRouter.put('/update-todo/:_id', async(req: Request, res: Response)=>{
+    console.log(req.params);
+    const {_id} = req.params;
+    // const {title} = req.query;
+    console.log(_id);
+
+    const {body} = req.body;
+
+    const updateFields = {
+        body: body
+    }
+
+    const db = await client.db("toDoDB");
+    const collection = await db.collection("todos");
+    
+    await collection.updateOne({_id: new ObjectId(_id)}, {$set: updateFields} );
+
+    const todo = await collection.findOne({_id: new ObjectId(_id)});
+
+    res.json(todo)
+})
+todosRouter.delete('/delete-todo/:_id', async(req: Request, res: Response)=>{
+    console.log(req.params);
+    const {_id} = req.params;
+    // const {title} = req.query;
+    console.log(_id);
+
+    const {body} = req.body;
+
+    const updateFields = {
+        body: body
+    }
+
+    const db = await client.db("toDoDB");
+    const collection = await db.collection("todos");
+    
+    const todo = await collection.deleteOne({_id: new ObjectId(_id)} );
+
+    // const todo = await collection.findOne({_id: new ObjectId(_id)});
+
+    res.json({
+        "confirmation":`Give todo deleted ${_id}`,
+        todo})
+})
 todosRouter.post('/create-todo', async(req: Request, res: Response)=>{
     console.log(req.body)
     const {title, body, createdAt} = req.body;

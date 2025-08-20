@@ -56,6 +56,39 @@ exports.todosRouter.get('/:_id', (req, res) => __awaiter(void 0, void 0, void 0,
     const todo = yield collection.findOne({ _id: new mongodb_2.ObjectId(_id) });
     res.json(todo);
 }));
+exports.todosRouter.put('/update-todo/:_id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params);
+    const { _id } = req.params;
+    // const {title} = req.query;
+    console.log(_id);
+    const { body } = req.body;
+    const updateFields = {
+        body: body
+    };
+    const db = yield mongodb_1.client.db("toDoDB");
+    const collection = yield db.collection("todos");
+    yield collection.updateOne({ _id: new mongodb_2.ObjectId(_id) }, { $set: updateFields });
+    const todo = yield collection.findOne({ _id: new mongodb_2.ObjectId(_id) });
+    res.json(todo);
+}));
+exports.todosRouter.delete('/delete-todo/:_id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params);
+    const { _id } = req.params;
+    // const {title} = req.query;
+    console.log(_id);
+    const { body } = req.body;
+    const updateFields = {
+        body: body
+    };
+    const db = yield mongodb_1.client.db("toDoDB");
+    const collection = yield db.collection("todos");
+    const todo = yield collection.deleteOne({ _id: new mongodb_2.ObjectId(_id) });
+    // const todo = await collection.findOne({_id: new ObjectId(_id)});
+    res.json({
+        "confirmation": `Give todo deleted ${_id}`,
+        todo
+    });
+}));
 exports.todosRouter.post('/create-todo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     const { title, body, createdAt } = req.body;
