@@ -15,12 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.todosRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const mongodb_1 = require("../config/mongodb");
+const mongodb_2 = require("mongodb");
 // const filePath = path.join(__dirname, "../../../db/todo.json")
 // const todos = fs.readFileSync(filePath, {encoding: 'utf-8'});
 exports.todosRouter = express_1.default.Router();
 exports.todosRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.query);
-    const { title } = req.query;
+    const { id } = req.query;
+    console.log(id);
     // const db = await client.db("toDoDB");
     //     const collection = await db.collection("todos").insertOne({
     //     "title": "Learn Node.js",
@@ -30,19 +32,30 @@ exports.todosRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, fun
     //     console.log(collection, "collections");
     const db = yield mongodb_1.client.db("toDoDB");
     const collection = yield db.collection("todos");
-    const cousor = collection.find({});
-    const todos = yield cousor.toArray();
-    res.json({
-        "sms": "From Express Router",
-        todos
-    });
-    console.log(title);
+    if (id) {
+        const todo = yield collection.findOne({ _id: new mongodb_2.ObjectId(id) });
+        res.json(todo);
+    }
+    else {
+        const cousor = collection.find({});
+        const todos = yield cousor.toArray();
+        res.json({
+            "sms": "From Express Router",
+            todos
+        });
+    }
+    // console.log(title)
 }));
-exports.todosRouter.get('/:title', (req, res) => {
+exports.todosRouter.get('/:_id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.params);
+    const { _id } = req.params;
     // const {title} = req.query;
-    res.json(req.params);
-});
+    console.log(_id);
+    const db = yield mongodb_1.client.db("toDoDB");
+    const collection = yield db.collection("todos");
+    const todo = yield collection.findOne({ _id: new mongodb_2.ObjectId(_id) });
+    res.json(todo);
+}));
 exports.todosRouter.post('/create-todo', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     const { title, body, createdAt } = req.body;

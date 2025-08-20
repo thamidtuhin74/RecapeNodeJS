@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import fs from 'fs'
 import path from 'path'
 import { client } from "../config/mongodb";
+import { ObjectId } from "mongodb";
 
 // const filePath = path.join(__dirname, "../../../db/todo.json")
 // const todos = fs.readFileSync(filePath, {encoding: 'utf-8'});
@@ -10,7 +11,8 @@ export const todosRouter = express.Router();
 
 todosRouter.get('/',  async (req: Request, res: Response)=>{
     console.log(req.query)
-    const {title} = req.query;
+    const {id} = req.query;
+    console.log(id)
     // const db = await client.db("toDoDB");
 //     const collection = await db.collection("todos").insertOne({
 //     "title": "Learn Node.js",
@@ -21,20 +23,38 @@ todosRouter.get('/',  async (req: Request, res: Response)=>{
     const db = await client.db("toDoDB");
     const collection = await db.collection("todos");
 
-    const cousor = collection.find({});
-    const todos = await cousor.toArray();
+    if(id){
+        const todo = await collection.findOne({_id: new ObjectId(id as string)});
 
-    res.json({
-        "sms": "From Express Router",
-        todos
-    })
-    console.log(title)
-})
-todosRouter.get('/:title', (req: Request, res: Response)=>{
-    console.log(req.params)
-    // const {title} = req.query;
+        res.json(
+            todo
+        )
+    }
+    else{
+        const cousor = collection.find({});
+        const todos = await cousor.toArray();
+
+        res.json({
+            "sms": "From Express Router",
+            todos
+        })
+    }
+
     
-    res.json(req.params)
+    // console.log(title)
+})
+todosRouter.get('/:_id', async(req: Request, res: Response)=>{
+    console.log(req.params);
+    const {_id} = req.params;
+    // const {title} = req.query;
+    console.log(_id);
+
+    const db = await client.db("toDoDB");
+    const collection = await db.collection("todos");
+    
+    const todo = await collection.findOne({_id: new ObjectId(_id)});
+
+    res.json(todo)
 })
 todosRouter.post('/create-todo', async(req: Request, res: Response)=>{
     console.log(req.body)
