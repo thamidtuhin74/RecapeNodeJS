@@ -97,7 +97,7 @@ const server = http.createServer((req, res)=>{
         res.writeHead(202,{
             "content-type" : "application/json"
         })
-        
+
         const title = url.searchParams.get("title")
         console.log(title);
         
@@ -138,6 +138,9 @@ server.listen(5000, "127.0.0.1", ()=>{
 /*
 
 /todos : Get all the todos;
-/todos/create-todo : Create a todo
+/todos/create-todo : POST Create a todo
+/todos/todos?title=express: GET Search Single todo;
+/todos/update-todo?title=express: PATCH update Single todo
+/todos/update-todo?title=express: DELETE Single todo 
 
 */
