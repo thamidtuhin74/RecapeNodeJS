@@ -12,20 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongodb_1 = require("mongodb");
 const app_1 = __importDefault(require("./app/app"));
+const mongodb_1 = require("./app/config/mongodb");
 let server;
 const port = 5000;
-const uri = "mongodb+srv://toDoAdmin:noS2TzL4l2NFHZx1@cluster0.vqsktco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-const client = new mongodb_1.MongoClient(uri, {
-    serverApi: {
-        version: mongodb_1.ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
 const bootstrap = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield client.connect();
+    yield mongodb_1.client.connect();
     console.log("successfully connected to MongoDB!");
     //     const db = await client.db("toDoDB");
     //     const collection = await db.collection("todos").insertOne({
