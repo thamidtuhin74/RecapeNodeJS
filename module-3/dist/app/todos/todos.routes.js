@@ -67,7 +67,7 @@ exports.todosRouter.put('/update-todo/:_id', (req, res) => __awaiter(void 0, voi
     };
     const db = yield mongodb_1.client.db("toDoDB");
     const collection = yield db.collection("todos");
-    yield collection.updateOne({ _id: new mongodb_2.ObjectId(_id) }, { $set: updateFields });
+    yield collection.updateOne({ _id: new mongodb_2.ObjectId(_id) }, { $set: updateFields }, { upsert: true });
     const todo = yield collection.findOne({ _id: new mongodb_2.ObjectId(_id) });
     res.json(todo);
 }));

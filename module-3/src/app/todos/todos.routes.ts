@@ -71,7 +71,7 @@ todosRouter.put('/update-todo/:_id', async(req: Request, res: Response)=>{
     const db = await client.db("toDoDB");
     const collection = await db.collection("todos");
     
-    await collection.updateOne({_id: new ObjectId(_id)}, {$set: updateFields} );
+    await collection.updateOne({_id: new ObjectId(_id)}, {$set: updateFields},{upsert: true} );
 
     const todo = await collection.findOne({_id: new ObjectId(_id)});
 
