@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -12,8 +21,22 @@ app.use(express_1.default.json()); //middlleware & a parser ; Converting JSON to
 app.use("/todos", todos_routes_1.todosRouter);
 const filePath = path_1.default.join(__dirname, "../../db/todo.json");
 const todos = fs_1.default.readFileSync(filePath, { encoding: 'utf-8' });
-app.get('/', (req, res) => {
-    res.send("Welcome to ToDo Server");
+app.get('/', (req, res, next) => {
+    next();
+}, (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // console.log(something);
+        res.json("Welcome to TO Do server From next()");
+    }
+    catch (error) {
+        next(error);
+    }
+}));
+app.use((error, req, res, next) => {
+    if (error) {
+        console.log("Error : ", error);
+        res.status(400).json({ message: "Something Wents Wrong form global error handler", error });
+    }
 });
 // app.get('/todos', (req: Request, res: Response)=>{
 //     console.log(req.query)

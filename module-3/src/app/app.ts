@@ -1,7 +1,8 @@
-import express, { Application, Request, Response } from 'express'
+import express, { Application, NextFunction, Request, Response } from 'express'
 import fs from 'fs'
 import path from 'path'
 import { todosRouter } from './todos/todos.routes';
+import { error } from 'console';
 const app: Application = express()
 
 app.use(express.json()); //middlleware & a parser ; Converting JSON to Object
@@ -13,10 +14,27 @@ const todos = fs.readFileSync(filePath, {encoding: 'utf-8'});
 
 
 
-app.get('/', (req: Request, res: Response)=>{
-    res.send("Welcome to ToDo Server");
-})
+app.get('/', (req: Request, res: Response, next: NextFunction)=>{
 
+    next()
+},
+ async (req: Request, res: Response, next: NextFunction)=>{
+    try{
+        // console.log(something);
+        res.json("Welcome to TO Do server From next()");
+    }catch(error){
+        next(error)
+    }
+ }
+
+)
+
+app.use((error: any, req: Request, res: Response, next: NextFunction)=>{
+    if(error){
+        console.log("Error : ", error);
+        res.status(400).json({message: "Something Wents Wrong form global error handler", error});
+    }
+})
 
 // app.get('/todos', (req: Request, res: Response)=>{
 //     console.log(req.query)
